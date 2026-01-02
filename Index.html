@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SerralhaPro</title>
+  <meta name="theme-color" content="#4b4b4b">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f2f2f2;
+    }
+    header {
+      background: #4b4b4b;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+    }
+    section {
+      background: white;
+      margin: 10px;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      background: #4b4b4b;
+      color: white;
+      border: none;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #333;
+    }
+    .resultado {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    ul {
+      padding-left: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<header>SerralhaPro</header>
+
+<section>
+  <h2>📐 Cálculo de Peso</h2>
+
+  <label>Tipo de material</label>
+  <select id="tipo">
+    <option value="barra">Barra maciça</option>
+    <option value="tubo">Tubo</option>
+    <option value="chapa">Chapa</option>
+  </select>
+
+  <label>Comprimento (m)</label>
+  <input type="number" id="comprimento">
+
+  <label>Peso por metro (kg)</label>
+  <input type="number" id="pesoMetro">
+
+  <label>Quantidade</label>
+  <input type="number" id="quantidade">
+
+  <button onclick="calcularPeso()">Calcular</button>
+  <div class="resultado" id="resultadoPeso"></div>
+</section>
+
+<section>
+  <h2>📋 Gestão de Trabalhos</h2>
+
+  <label>Cliente</label>
+  <input type="text" id="cliente">
+
+  <label>Serviço</label>
+  <input type="text" id="servico">
+
+  <label>Observações</label>
+  <textarea id="obs"></textarea>
+
+  <button onclick="guardarTrabalho()">Guardar Trabalho</button>
+
+  <ul id="listaTrabalhos"></ul>
+</section>
+
+<script>
+  function calcularPeso() {
+    const comprimento = parseFloat(document.getElementById("comprimento").value) || 0;
+    const pesoMetro = parseFloat(document.getElementById("pesoMetro").value) || 0;
+    const quantidade = parseInt(document.getElementById("quantidade").value) || 0;
+
+    const total = comprimento * pesoMetro * quantidade;
+    document.getElementById("resultadoPeso").innerText =
+      "Peso total: " + total.toFixed(2) + " kg";
+  }
+
+  function guardarTrabalho() {
+    const cliente = document.getElementById("cliente").value;
+    const servico = document.getElementById("servico").value;
+
+    if (!cliente || !servico) {
+      alert("Preencha cliente e serviço");
+      return;
+    }
+
+    const lista = document.getElementById("listaTrabalhos");
+    const item = document.createElement("li");
+    item.innerText = cliente + " – " + servico;
+    lista.appendChild(item);
+
+    document.getElementById("cliente").value = "";
+    document.getElementById("servico").value = "";
+    document.getElementById("obs").value = "";
+  }
+</script>
+
+</body>
+</html>
