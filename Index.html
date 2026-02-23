@@ -2,134 +2,1192 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SerralhaPro</title>
-  <meta name="theme-color" content="#4b4b4b">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Umojametal</title>
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Umojametal">
+  <link rel="manifest" href="manifest.json">
+
   <style>
+    /* ═══════════════════════════════════════
+       RESET & DARK MODE BASE
+    ═══════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --laranja: #FF5722;
+      --laranja-hover: #e64a19;
+      --preto: #000000;
+      --cinza-escuro: #111111;
+      --cinza-medio: #1a1a1a;
+      --cinza-card: #222222;
+      --cinza-borda: #333333;
+      --texto: #f0f0f0;
+      --texto-muted: #888888;
+      --vermelho-alerta: #ff2222;
+      --verde: #4caf50;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f2f2f2;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--preto);
+      color: var(--texto);
+      min-height: 100vh;
+      padding-bottom: 100px;
     }
+
+    /* ═══════════════════════════════════════
+       HEADER
+    ═══════════════════════════════════════ */
     header {
-      background: #4b4b4b;
-      color: white;
-      padding: 15px;
+      background: var(--cinza-escuro);
+      border-bottom: 2px solid var(--laranja);
+      padding: 16px;
       text-align: center;
-      font-size: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    section {
-      background: white;
-      margin: 10px;
-      padding: 15px;
-      border-radius: 8px;
+    header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--laranja);
+      letter-spacing: 2px;
     }
-    h2 {
-      margin-top: 0;
-      color: #333;
+    header p {
+      font-size: 11px;
+      color: var(--texto-muted);
+      margin-top: 2px;
     }
+
+    /* ═══════════════════════════════════════
+       NAV TABS
+    ═══════════════════════════════════════ */
+    .nav-tabs {
+      display: flex;
+      overflow-x: auto;
+      background: var(--cinza-escuro);
+      border-bottom: 1px solid var(--cinza-borda);
+      scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      flex: 0 0 auto;
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--texto-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .nav-tab.active {
+      color: var(--laranja);
+      border-bottom-color: var(--laranja);
+    }
+
+    /* ═══════════════════════════════════════
+       PAGES
+    ═══════════════════════════════════════ */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ═══════════════════════════════════════
+       CARDS / SECTIONS
+    ═══════════════════════════════════════ */
+    .card {
+      background: var(--cinza-card);
+      border: 1px solid var(--cinza-borda);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 12px;
+    }
+    .card h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--laranja);
+      margin-bottom: 14px;
+    }
+
+    /* ═══════════════════════════════════════
+       FORM ELEMENTS
+    ═══════════════════════════════════════ */
     label {
       display: block;
-      margin-top: 10px;
+      font-size: 12px;
+      color: var(--texto-muted);
+      margin-top: 12px;
+      margin-bottom: 4px;
     }
-    input, select, textarea, button {
+    input, select, textarea {
       width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      box-sizing: border-box;
+      padding: 10px 12px;
+      background: var(--cinza-escuro);
+      border: 1px solid var(--cinza-borda);
+      border-radius: 8px;
+      color: var(--texto);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
     }
-    button {
-      background: #4b4b4b;
-      color: white;
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--laranja);
+    }
+    select option { background: var(--cinza-escuro); }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+    /* ═══════════════════════════════════════
+       BUTTONS
+    ═══════════════════════════════════════ */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px;
       border: none;
-      margin-top: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
       cursor: pointer;
+      margin-top: 14px;
+      transition: opacity 0.2s;
     }
-    button:hover {
-      background: #333;
+    .btn:active { opacity: 0.8; }
+    .btn-primary { background: var(--laranja); color: #000; }
+    .btn-secondary { background: var(--cinza-borda); color: var(--texto); }
+    .btn-green { background: var(--verde); color: #000; }
+    .btn-whatsapp { background: #25D366; color: #000; }
+    .btn-sm {
+      width: auto;
+      padding: 7px 12px;
+      font-size: 12px;
+      margin-top: 0;
+      border-radius: 6px;
     }
-    .resultado {
-      margin-top: 10px;
-      font-weight: bold;
+
+    /* ═══════════════════════════════════════
+       DASHBOARD — RESUMO
+    ═══════════════════════════════════════ */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 12px;
     }
-    ul {
-      padding-left: 18px;
+    .stat-card {
+      background: var(--cinza-card);
+      border: 1px solid var(--cinza-borda);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
     }
+    .stat-card .valor {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--laranja);
+    }
+    .stat-card .label {
+      font-size: 11px;
+      color: var(--texto-muted);
+      margin-top: 4px;
+    }
+    .lucro-card {
+      background: linear-gradient(135deg, #1a2a1a, #0d1f0d);
+      border-color: var(--verde);
+      grid-column: span 2;
+    }
+    .lucro-card .valor { color: var(--verde); font-size: 28px; }
+
+    /* ═══════════════════════════════════════
+       RESULTADO ORÇAMENTO
+    ═══════════════════════════════════════ */
+    .resultado-box {
+      background: var(--cinza-escuro);
+      border: 1px solid var(--laranja);
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 14px;
+    }
+    .resultado-linha {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--cinza-borda);
+    }
+    .resultado-linha:last-child { border: none; }
+    .resultado-total {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--laranja);
+      margin-top: 8px;
+    }
+
+    /* ═══════════════════════════════════════
+       STOCK ALERT
+    ═══════════════════════════════════════ */
+    .stock-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: var(--cinza-escuro);
+      border: 1px solid var(--cinza-borda);
+      border-radius: 8px;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .stock-item.alerta {
+      border-color: var(--vermelho-alerta);
+      box-shadow: 0 0 8px rgba(255,34,34,0.3);
+    }
+    .stock-badge {
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+    .stock-badge.ok { background: #1a3a1a; color: var(--verde); }
+    .stock-badge.baixo { background: #3a1a1a; color: var(--vermelho-alerta); }
+
+    /* ═══════════════════════════════════════
+       IMAGENS — CATÁLOGO / GALERIA
+    ═══════════════════════════════════════ */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+    .img-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: #111;
+      cursor: zoom-in;
+    }
+    .img-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .img-wrapper:hover img { transform: scale(1.02); }
+    .img-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      padding: 20px 12px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .img-overlay span { font-size: 13px; font-weight: 600; }
+    .btn-download-img {
+      background: var(--laranja);
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ═══════════════════════════════════════
+       FULLSCREEN LIGHTBOX
+    ═══════════════════════════════════════ */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.97);
+      z-index: 99999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox-img {
+      max-width: 100%;
+      max-height: 85vh;
+      object-fit: contain;
+      transition: transform 0.15s ease;
+      touch-action: none;
+      user-select: none;
+    }
+    .lightbox-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    }
+    .lb-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      color: #fff;
+      width: 38px;
+      height: 38px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+    .lb-btn.laranja { background: var(--laranja); color: #000; border-color: var(--laranja); }
+    .lb-hint {
+      position: absolute;
+      bottom: 20px;
+      color: #444;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════
+       ASSINATURA DIGITAL
+    ═══════════════════════════════════════ */
+    #canvas-assinatura {
+      width: 100%;
+      height: 160px;
+      background: var(--cinza-escuro);
+      border: 1px dashed var(--cinza-borda);
+      border-radius: 8px;
+      cursor: crosshair;
+      display: block;
+      touch-action: none;
+    }
+
+    /* ═══════════════════════════════════════
+       LISTA DE TRABALHOS / CLIENTES
+    ═══════════════════════════════════════ */
+    .lista-item {
+      background: var(--cinza-escuro);
+      border: 1px solid var(--cinza-borda);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .lista-item strong { color: var(--laranja); }
+
+    /* ═══════════════════════════════════════
+       PWA INSTALL BANNER
+    ═══════════════════════════════════════ */
+    #pwa-banner {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9998;
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      border: 1px solid var(--laranja);
+      border-radius: 16px;
+      padding: 12px 16px;
+      box-shadow: 0 8px 32px rgba(255,87,34,0.25);
+      max-width: calc(100vw - 32px);
+      align-items: center;
+      gap: 12px;
+      animation: slideUp 0.4s ease forwards;
+    }
+    #pwa-banner.show { display: flex; }
+    .pwa-icon {
+      width: 40px; height: 40px;
+      background: var(--laranja);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px; color: #000;
+      flex-shrink: 0;
+    }
+    .pwa-text p { margin: 0; }
+    .pwa-text .t1 { font-size: 13px; font-weight: 700; }
+    .pwa-text .t2 { font-size: 11px; color: var(--texto-muted); }
+    #btn-instalar {
+      background: var(--laranja); color: #000;
+      border: none; border-radius: 10px;
+      padding: 8px 14px; font-size: 12px; font-weight: 700;
+      cursor: pointer; flex-shrink: 0;
+    }
+    #btn-fechar-pwa {
+      background: transparent; border: none;
+      color: var(--texto-muted); cursor: pointer;
+      font-size: 18px; flex-shrink: 0; padding: 4px;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--laranja); }
   </style>
 </head>
 <body>
 
-<header>SerralhaPro</header>
+<!-- ══════════════════════════════════════
+     HEADER
+══════════════════════════════════════ -->
+<header>
+  <h1>⚙ UMOJAMETAL</h1>
+  <p>Gestão Profissional de Serralharia</p>
+</header>
 
-<section>
-  <h2>📐 Cálculo de Peso</h2>
+<!-- ══════════════════════════════════════
+     NAV TABS
+══════════════════════════════════════ -->
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="mudarPagina('dashboard', this)">📊 Dashboard</div>
+  <div class="nav-tab" onclick="mudarPagina('orcamento', this)">📋 Orçamento</div>
+  <div class="nav-tab" onclick="mudarPagina('clientes', this)">👤 Clientes</div>
+  <div class="nav-tab" onclick="mudarPagina('catalogo', this)">🖼 Catálogo</div>
+  <div class="nav-tab" onclick="mudarPagina('stock', this)">📦 Stock</div>
+  <div class="nav-tab" onclick="mudarPagina('calculo', this)">📐 Cálculo</div>
+</div>
 
-  <label>Tipo de material</label>
-  <select id="tipo">
-    <option value="barra">Barra maciça</option>
-    <option value="tubo">Tubo</option>
-    <option value="chapa">Chapa</option>
-  </select>
+<!-- ══════════════════════════════════════
+     PÁGINA: DASHBOARD
+══════════════════════════════════════ -->
+<div id="page-dashboard" class="page active">
 
-  <label>Comprimento (m)</label>
-  <input type="number" id="comprimento">
+  <div class="dashboard-grid">
+    <div class="stat-card lucro-card">
+      <div class="valor" id="dash-lucro">0 Kz</div>
+      <div class="label">💰 Lucro Real (Vendas − Custos)</div>
+    </div>
+    <div class="stat-card">
+      <div class="valor" id="dash-vendas">0 Kz</div>
+      <div class="label">Total Vendas</div>
+    </div>
+    <div class="stat-card">
+      <div class="valor" id="dash-custos">0 Kz</div>
+      <div class="label">Total Custos</div>
+    </div>
+    <div class="stat-card">
+      <div class="valor" id="dash-trabalhos">0</div>
+      <div class="label">Trabalhos</div>
+    </div>
+    <div class="stat-card">
+      <div class="valor" id="dash-clientes">0</div>
+      <div class="label">Clientes</div>
+    </div>
+  </div>
 
-  <label>Peso por metro (kg)</label>
-  <input type="number" id="pesoMetro">
+  <div class="card">
+    <h2>📋 Últimos Trabalhos</h2>
+    <div id="lista-dash-trabalhos">
+      <p style="color:var(--texto-muted);font-size:13px;">Sem trabalhos registados.</p>
+    </div>
+  </div>
+</div>
 
-  <label>Quantidade</label>
-  <input type="number" id="quantidade">
+<!-- ══════════════════════════════════════
+     PÁGINA: ORÇAMENTO
+══════════════════════════════════════ -->
+<div id="page-orcamento" class="page">
+  <div class="card">
+    <h2>📋 Formulário de Orçamento</h2>
 
-  <button onclick="calcularPeso()">Calcular</button>
-  <div class="resultado" id="resultadoPeso"></div>
-</section>
+    <label>Cliente</label>
+    <input type="text" id="orc-cliente" placeholder="Nome do cliente">
 
-<section>
-  <h2>📋 Gestão de Trabalhos</h2>
+    <label>Serviço / Item</label>
+    <input type="text" id="orc-servico" placeholder="Ex: Portão, Grade, Janela...">
 
-  <label>Cliente</label>
-  <input type="text" id="cliente">
+    <div class="row-2">
+      <div>
+        <label>Largura (m)</label>
+        <input type="number" id="orc-largura" placeholder="0.00" step="0.01" oninput="calcularOrcamento()">
+      </div>
+      <div>
+        <label>Altura (m)</label>
+        <input type="number" id="orc-altura" placeholder="0.00" step="0.01" oninput="calcularOrcamento()">
+      </div>
+    </div>
 
-  <label>Serviço</label>
-  <input type="text" id="servico">
+    <label>Custo de Materiais (Kz)</label>
+    <input type="number" id="orc-materiais" placeholder="0" oninput="calcularOrcamento()">
 
-  <label>Observações</label>
-  <textarea id="obs"></textarea>
+    <label>Mão de Obra (Kz)</label>
+    <input type="number" id="orc-mao-obra" placeholder="0" oninput="calcularOrcamento()">
 
-  <button onclick="guardarTrabalho()">Guardar Trabalho</button>
+    <label>Custos Fixos (Kz)</label>
+    <input type="number" id="orc-custos-fixos" placeholder="0" oninput="calcularOrcamento()">
 
-  <ul id="listaTrabalhos"></ul>
-</section>
+    <label>Margem de Lucro (%)</label>
+    <input type="number" id="orc-margem" placeholder="20" value="20" oninput="calcularOrcamento()">
 
+    <label>Prazo de Entrega</label>
+    <input type="text" id="orc-prazo" placeholder="Ex: 7 dias úteis">
+
+    <div class="row-2">
+      <div>
+        <label>IVA</label>
+        <select id="orc-iva" onchange="calcularOrcamento()">
+          <option value="0">0%</option>
+          <option value="7">7%</option>
+          <option value="14" selected>14%</option>
+        </select>
+      </div>
+      <div>
+        <label>Retenção na Fonte</label>
+        <select id="orc-retencao" onchange="calcularOrcamento()">
+          <option value="0">Não aplicar</option>
+          <option value="6.5">6.5%</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- RESULTADO -->
+    <div class="resultado-box" id="resultado-orcamento">
+      <div class="resultado-linha"><span>Materiais (+ 10% margem)</span><span id="r-materiais">0 Kz</span></div>
+      <div class="resultado-linha"><span>Mão de Obra</span><span id="r-mao-obra">0 Kz</span></div>
+      <div class="resultado-linha"><span>Custos Fixos</span><span id="r-custos-fixos">0 Kz</span></div>
+      <div class="resultado-linha"><span>Subtotal</span><span id="r-subtotal">0 Kz</span></div>
+      <div class="resultado-linha"><span>Margem de Lucro</span><span id="r-margem">0 Kz</span></div>
+      <div class="resultado-linha"><span>IVA</span><span id="r-iva">0 Kz</span></div>
+      <div class="resultado-linha"><span>Retenção na Fonte</span><span id="r-retencao">0 Kz</span></div>
+      <div class="resultado-total">TOTAL FINAL: <span id="r-total">0 Kz</span></div>
+    </div>
+
+    <button class="btn btn-whatsapp" onclick="enviarWhatsApp()">
+      📱 Enviar via WhatsApp
+    </button>
+    <button class="btn btn-primary" onclick="guardarOrcamento()">
+      💾 Guardar Orçamento
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PÁGINA: CLIENTES
+══════════════════════════════════════ -->
+<div id="page-clientes" class="page">
+  <div class="card">
+    <h2>👤 Registo de Cliente</h2>
+
+    <label>Nome</label>
+    <input type="text" id="cli-nome" placeholder="Nome completo">
+
+    <label>Telefone</label>
+    <input type="tel" id="cli-tel" placeholder="+244 9xx xxx xxx">
+
+    <label>Morada</label>
+    <input type="text" id="cli-morada" placeholder="Endereço">
+
+    <button class="btn btn-secondary" onclick="capturarGPS()">
+      📍 Capturar Localização GPS
+    </button>
+    <div id="gps-resultado" style="font-size:12px;color:var(--texto-muted);margin-top:6px;"></div>
+
+    <label>Notas</label>
+    <textarea id="cli-notas" placeholder="Observações sobre o cliente..."></textarea>
+
+    <!-- ASSINATURA DIGITAL -->
+    <label>✍️ Assinatura Digital do Cliente</label>
+    <canvas id="canvas-assinatura"></canvas>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button class="btn btn-secondary btn-sm" onclick="limparAssinatura()" style="flex:1;">Limpar</button>
+      <button class="btn btn-primary btn-sm" onclick="guardarAssinatura()" style="flex:1;">Guardar Assinatura</button>
+    </div>
+
+    <button class="btn btn-primary" onclick="guardarCliente()" style="margin-top:16px;">
+      💾 Guardar Cliente
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>📋 Clientes Registados</h2>
+    <div id="lista-clientes">
+      <p style="color:var(--texto-muted);font-size:13px;">Sem clientes registados.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PÁGINA: CATÁLOGO / GALERIA
+══════════════════════════════════════ -->
+<div id="page-catalogo" class="page">
+  <div class="card">
+    <h2>📷 Adicionar Foto</h2>
+    <label>Título</label>
+    <input type="text" id="cat-titulo" placeholder="Ex: Portão Batente, Grade...">
+    <label>Categoria</label>
+    <select id="cat-categoria">
+      <option value="catalogo">Catálogo</option>
+      <option value="concluido">Projeto Concluído</option>
+      <option value="galeria">Galeria</option>
+    </select>
+    <label>Foto</label>
+    <input type="file" id="cat-foto" accept="image/*" capture="environment">
+    <button class="btn btn-primary" onclick="adicionarFoto()">📸 Adicionar Foto</button>
+  </div>
+
+  <div class="card">
+    <h2>🖼 Catálogo</h2>
+    <div class="catalog-grid" id="grid-catalogo">
+      <p style="color:var(--texto-muted);font-size:13px;">Sem fotos no catálogo.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>✅ Projetos Concluídos</h2>
+    <div class="catalog-grid" id="grid-concluidos">
+      <p style="color:var(--texto-muted);font-size:13px;">Sem projetos concluídos.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📸 Galeria</h2>
+    <div class="catalog-grid" id="grid-galeria">
+      <p style="color:var(--texto-muted);font-size:13px;">Sem fotos na galeria.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PÁGINA: STOCK
+══════════════════════════════════════ -->
+<div id="page-stock" class="page">
+  <div class="card">
+    <h2>📦 Adicionar Item de Stock</h2>
+    <label>Material</label>
+    <input type="text" id="stk-nome" placeholder="Ex: Tubo 40x40, Chapa 2mm...">
+    <div class="row-2">
+      <div>
+        <label>Quantidade</label>
+        <input type="number" id="stk-qty" placeholder="0">
+      </div>
+      <div>
+        <label>Unidade</label>
+        <select id="stk-unidade">
+          <option>unid</option>
+          <option>kg</option>
+          <option>m</option>
+          <option>m²</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="adicionarStock()">➕ Adicionar</button>
+  </div>
+
+  <div class="card">
+    <h2>📋 Inventário</h2>
+    <p style="font-size:11px;color:var(--vermelho-alerta);margin-bottom:8px;">⚠️ Contorno vermelho = menos de 3 unidades</p>
+    <div id="lista-stock">
+      <p style="color:var(--texto-muted);font-size:13px;">Stock vazio.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PÁGINA: CÁLCULO DE PESO
+══════════════════════════════════════ -->
+<div id="page-calculo" class="page">
+  <div class="card">
+    <h2>📐 Cálculo de Peso</h2>
+
+    <label>Tipo de material</label>
+    <select id="tipo">
+      <option value="barra">Barra maciça</option>
+      <option value="tubo">Tubo</option>
+      <option value="chapa">Chapa</option>
+    </select>
+
+    <label>Comprimento (m)</label>
+    <input type="number" id="comprimento" placeholder="0.00" step="0.01">
+
+    <label>Peso por metro (kg)</label>
+    <input type="number" id="pesoMetro" placeholder="0.00" step="0.01">
+
+    <label>Quantidade</label>
+    <input type="number" id="quantidade" placeholder="1">
+
+    <button class="btn btn-primary" onclick="calcularPeso()">⚙️ Calcular Peso</button>
+
+    <div class="resultado-box" id="resultadoPeso" style="display:none;">
+      <div class="resultado-total" id="resultadoPesoTexto"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📋 Gestão de Trabalhos</h2>
+
+    <label>Cliente</label>
+    <input type="text" id="cliente" placeholder="Nome do cliente">
+
+    <label>Serviço</label>
+    <input type="text" id="servico" placeholder="Descrição do serviço">
+
+    <label>Valor (Kz)</label>
+    <input type="number" id="trabalho-valor" placeholder="0">
+
+    <label>Observações</label>
+    <textarea id="obs" placeholder="Notas adicionais..."></textarea>
+
+    <button class="btn btn-primary" onclick="guardarTrabalho()">💾 Guardar Trabalho</button>
+
+    <div id="listaTrabalhos" style="margin-top:12px;"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LIGHTBOX FULLSCREEN
+══════════════════════════════════════ -->
+<div id="lightbox">
+  <div class="lightbox-bar">
+    <button class="lb-btn laranja" id="lb-download" onclick="downloadLightbox()" title="Download">⬇</button>
+    <button class="lb-btn" onclick="zoomOut()" title="Zoom -">−</button>
+    <button class="lb-btn" onclick="zoomIn()" title="Zoom +">+</button>
+    <button class="lb-btn" onclick="fecharLightbox()" title="Fechar">✕</button>
+  </div>
+  <img id="lightbox-img" src="" alt="Fullscreen">
+  <p class="lb-hint">Pinça para zoom · Duplo toque para resetar · Scroll para zoom</p>
+</div>
+
+<!-- ══════════════════════════════════════
+     PWA INSTALL BANNER
+══════════════════════════════════════ -->
+<div id="pwa-banner">
+  <div class="pwa-icon">U</div>
+  <div class="pwa-text">
+    <p class="t1">Umojametal</p>
+    <p class="t2">Instala para acesso rápido</p>
+  </div>
+  <button id="btn-instalar" onclick="instalarPWA()">⬇ Instalar</button>
+  <button id="btn-fechar-pwa" onclick="fecharBannerPWA()">✕</button>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
 <script>
-  function calcularPeso() {
-    const comprimento = parseFloat(document.getElementById("comprimento").value) || 0;
-    const pesoMetro = parseFloat(document.getElementById("pesoMetro").value) || 0;
-    const quantidade = parseInt(document.getElementById("quantidade").value) || 0;
+  // ─── ESTADO GLOBAL ───────────────────
+  let dados = {
+    trabalhos: [],
+    clientes: [],
+    stock: [],
+    fotos: [],
+    financeiro: { vendas: 0, custos: 0 }
+  };
 
-    const total = comprimento * pesoMetro * quantidade;
-    document.getElementById("resultadoPeso").innerText =
-      "Peso total: " + total.toFixed(2) + " kg";
+  // Carregar dados guardados
+  try {
+    const saved = localStorage.getItem('umojametal');
+    if (saved) dados = JSON.parse(saved);
+  } catch(e) {}
+
+  function guardar() {
+    localStorage.setItem('umojametal', JSON.stringify(dados));
   }
 
-  function guardarTrabalho() {
-    const cliente = document.getElementById("cliente").value;
-    const servico = document.getElementById("servico").value;
+  // ─── NAVEGAÇÃO ───────────────────────
+  function mudarPagina(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    el.classList.add('active');
+    if (id === 'dashboard') atualizarDashboard();
+    if (id === 'stock') renderStock();
+    if (id === 'catalogo') renderFotos();
+    if (id === 'clientes') renderClientes();
+    if (id === 'calculo') renderTrabalhos();
+  }
 
-    if (!cliente || !servico) {
-      alert("Preencha cliente e serviço");
+  // ─── DASHBOARD ───────────────────────
+  function atualizarDashboard() {
+    const vendas = dados.financeiro.vendas;
+    const custos = dados.financeiro.custos;
+    const lucro = vendas - custos;
+
+    document.getElementById('dash-lucro').textContent = formatKz(lucro);
+    document.getElementById('dash-vendas').textContent = formatKz(vendas);
+    document.getElementById('dash-custos').textContent = formatKz(custos);
+    document.getElementById('dash-trabalhos').textContent = dados.trabalhos.length;
+    document.getElementById('dash-clientes').textContent = dados.clientes.length;
+
+    const cont = document.getElementById('lista-dash-trabalhos');
+    if (!dados.trabalhos.length) {
+      cont.innerHTML = '<p style="color:var(--texto-muted);font-size:13px;">Sem trabalhos.</p>';
       return;
     }
-
-    const lista = document.getElementById("listaTrabalhos");
-    const item = document.createElement("li");
-    item.innerText = cliente + " – " + servico;
-    lista.appendChild(item);
-
-    document.getElementById("cliente").value = "";
-    document.getElementById("servico").value = "";
-    document.getElementById("obs").value = "";
+    cont.innerHTML = dados.trabalhos.slice(-5).reverse().map(t =>
+      `<div class="lista-item"><strong>${t.cliente}</strong> — ${t.servico}
+       <span style="float:right;color:var(--verde)">${formatKz(t.valor || 0)}</span></div>`
+    ).join('');
   }
+
+  function formatKz(val) {
+    return Number(val || 0).toLocaleString('pt-AO') + ' Kz';
+  }
+
+  // ─── ORÇAMENTO ───────────────────────
+  function calcularOrcamento() {
+    const mat = parseFloat(document.getElementById('orc-materiais').value) || 0;
+    const mao = parseFloat(document.getElementById('orc-mao-obra').value) || 0;
+    const fix = parseFloat(document.getElementById('orc-custos-fixos').value) || 0;
+    const margem = parseFloat(document.getElementById('orc-margem').value) || 0;
+    const iva = parseFloat(document.getElementById('orc-iva').value) || 0;
+    const ret = parseFloat(document.getElementById('orc-retencao').value) || 0;
+
+    // Fórmula: Total = ((Materiais * 1.10) + Mão de Obra + Custos Fixos) * (1 + Margem/100)
+    const matAjustado = mat * 1.10;
+    const subtotal = matAjustado + mao + fix;
+    const comMargem = subtotal * (1 + margem / 100);
+    const valorIva = comMargem * (iva / 100);
+    const valorRet = comMargem * (ret / 100);
+    const total = comMargem + valorIva - valorRet;
+
+    document.getElementById('r-materiais').textContent = formatKz(matAjustado);
+    document.getElementById('r-mao-obra').textContent = formatKz(mao);
+    document.getElementById('r-custos-fixos').textContent = formatKz(fix);
+    document.getElementById('r-subtotal').textContent = formatKz(subtotal);
+    document.getElementById('r-margem').textContent = formatKz(comMargem - subtotal);
+    document.getElementById('r-iva').textContent = formatKz(valorIva);
+    document.getElementById('r-retencao').textContent = '−' + formatKz(valorRet);
+    document.getElementById('r-total').textContent = formatKz(total);
+  }
+
+  function enviarWhatsApp() {
+    const item = document.getElementById('orc-servico').value || 'Serviço';
+    const l = document.getElementById('orc-largura').value || '0';
+    const a = document.getElementById('orc-altura').value || '0';
+    const total = document.getElementById('r-total').textContent;
+    const msg = `Olá! Segue o resumo do seu orçamento da Umojametal. Serviço: ${item}, Medidas: ${l}x${a}m. TOTAL FINAL: ${total}. Pode confirmar?`;
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  }
+
+  function guardarOrcamento() {
+    const cliente = document.getElementById('orc-cliente').value;
+    const servico = document.getElementById('orc-servico').value;
+    const total = parseFloat(document.getElementById('orc-materiais').value || 0)
+                + parseFloat(document.getElementById('orc-mao-obra').value || 0);
+    if (!cliente || !servico) { alert('Preenche cliente e serviço'); return; }
+
+    dados.trabalhos.push({ cliente, servico, valor: parseFloat(document.getElementById('r-total').textContent) || 0, data: new Date().toLocaleDateString('pt-AO') });
+    dados.financeiro.vendas += parseFloat(document.getElementById('r-total').textContent) || 0;
+    dados.financeiro.custos += (parseFloat(document.getElementById('orc-materiais').value) || 0)
+                              + (parseFloat(document.getElementById('orc-custos-fixos').value) || 0);
+    guardar();
+    alert('Orçamento guardado!');
+  }
+
+  // ─── CLIENTES ────────────────────────
+  let gpsCoords = null;
+
+  function capturarGPS() {
+    const el = document.getElementById('gps-resultado');
+    el.textContent = '📡 A obter localização...';
+    if (!navigator.geolocation) { el.textContent = 'GPS não suportado.'; return; }
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        gpsCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        el.innerHTML = `📍 ${gpsCoords.lat.toFixed(6)}, ${gpsCoords.lng.toFixed(6)}
+          <a href="https://maps.google.com/?q=${gpsCoords.lat},${gpsCoords.lng}"
+             target="_blank" style="color:var(--laranja);margin-left:8px;">Abrir no Maps</a>`;
+      },
+      err => { el.textContent = 'Erro ao obter GPS: ' + err.message; }
+    );
+  }
+
+  // ─── ASSINATURA DIGITAL ───────────────
+  const canvas = document.getElementById('canvas-assinatura');
+  const ctx = canvas.getContext('2d');
+  let desenhando = false;
+
+  function setupCanvas() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 160;
+    ctx.strokeStyle = '#FF5722';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+  }
+  window.addEventListener('load', setupCanvas);
+  window.addEventListener('resize', setupCanvas);
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] : e;
+    return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+  }
+
+  canvas.addEventListener('mousedown', e => { desenhando = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); });
+  canvas.addEventListener('mousemove', e => { if (!desenhando) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+  canvas.addEventListener('mouseup', () => desenhando = false);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); desenhando = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); }, { passive: false });
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!desenhando) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }, { passive: false });
+  canvas.addEventListener('touchend', () => desenhando = false);
+
+  function limparAssinatura() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+  function guardarAssinatura() { alert('Assinatura registada!'); }
+
+  function guardarCliente() {
+    const nome = document.getElementById('cli-nome').value;
+    const tel = document.getElementById('cli-tel').value;
+    if (!nome) { alert('Preenche o nome'); return; }
+    dados.clientes.push({
+      nome, tel,
+      morada: document.getElementById('cli-morada').value,
+      notas: document.getElementById('cli-notas').value,
+      gps: gpsCoords,
+      data: new Date().toLocaleDateString('pt-AO')
+    });
+    guardar();
+    renderClientes();
+    document.getElementById('cli-nome').value = '';
+    document.getElementById('cli-tel').value = '';
+    document.getElementById('cli-morada').value = '';
+    document.getElementById('cli-notas').value = '';
+    gpsCoords = null;
+    document.getElementById('gps-resultado').textContent = '';
+    limparAssinatura();
+    alert('Cliente guardado!');
+  }
+
+  function renderClientes() {
+    const cont = document.getElementById('lista-clientes');
+    if (!dados.clientes.length) { cont.innerHTML = '<p style="color:var(--texto-muted);font-size:13px;">Sem clientes.</p>'; return; }
+    cont.innerHTML = dados.clientes.map((c, i) => `
+      <div class="lista-item">
+        <strong>${c.nome}</strong> · ${c.tel || '—'}
+        ${c.gps ? `<br><a href="https://maps.google.com/?q=${c.gps.lat},${c.gps.lng}" target="_blank" style="color:var(--laranja);font-size:11px;">📍 Ver no Maps</a>` : ''}
+        <span style="float:right;font-size:11px;color:var(--texto-muted)">${c.data}</span>
+      </div>`).join('');
+  }
+
+  // ─── CATÁLOGO / GALERIA ───────────────
+  function adicionarFoto() {
+    const titulo = document.getElementById('cat-titulo').value;
+    const categoria = document.getElementById('cat-categoria').value;
+    const file = document.getElementById('cat-foto').files[0];
+    if (!file) { alert('Seleciona uma foto'); return; }
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      dados.fotos.push({ titulo, categoria, src: e.target.result, data: new Date().toLocaleDateString('pt-AO') });
+      guardar();
+      renderFotos();
+      document.getElementById('cat-titulo').value = '';
+      document.getElementById('cat-foto').value = '';
+      alert('Foto adicionada!');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function renderFotos() {
+    const cats = ['catalogo', 'concluido', 'galeria'];
+    const grids = ['grid-catalogo', 'grid-concluidos', 'grid-galeria'];
+    cats.forEach((cat, i) => {
+      const items = dados.fotos.filter(f => f.categoria === cat);
+      const grid = document.getElementById(grids[i]);
+      if (!items.length) { grid.innerHTML = '<p style="color:var(--texto-muted);font-size:13px;">Sem fotos.</p>'; return; }
+      grid.innerHTML = items.map((f, idx) => `
+        <div class="img-wrapper" onclick="abrirLightbox('${f.src}', '${f.titulo}', ${cat === 'concluido'})">
+          <img src="${f.src}" alt="${f.titulo}" loading="lazy">
+          <div class="img-overlay">
+            <span>${f.titulo}</span>
+            ${cat === 'concluido' ? `<button class="btn-download-img" onclick="event.stopPropagation();downloadImg('${f.src}','${f.titulo}')">⬇ Download</button>` : ''}
+          </div>
+        </div>`).join('');
+    });
+  }
+
+  // ─── LIGHTBOX ────────────────────────
+  let lbScale = 1;
+  let lbSrc = '';
+  let lbShowDownload = false;
+  let lbLastTouch = null;
+  let lbDragging = false;
+  let lbLastPos = { x: 0, y: 0 };
+  let lbTranslate = { x: 0, y: 0 };
+
+  function abrirLightbox(src, alt, showDownload) {
+    lbSrc = src;
+    lbShowDownload = showDownload;
+    lbScale = 1;
+    lbTranslate = { x: 0, y: 0 };
+    const img = document.getElementById('lightbox-img');
+    img.src = src;
+    img.alt = alt || '';
+    img.style.transform = 'scale(1) translate(0,0)';
+    document.getElementById('lb-download').style.display = showDownload ? 'flex' : 'none';
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fecharLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function aplicarTransform() {
+    const img = document.getElementById('lightbox-img');
+    img.style.transform = `scale(${lbScale}) translate(${lbTranslate.x / lbScale}px, ${lbTranslate.y / lbScale}px)`;
+  }
+
+  function zoomIn() { lbScale = Math.min(lbScale + 0.5, 5); aplicarTransform(); }
+  function zoomOut() { lbScale = Math.max(lbScale - 0.5, 1); if (lbScale === 1) lbTranslate = { x: 0, y: 0 }; aplicarTransform(); }
+
+  // Pinch-to-zoom
+  const lb = document.getElementById('lightbox');
+  lb.addEventListener('wheel', e => { e.preventDefault(); lbScale = Math.min(Math.max(lbScale - e.deltaY * 0.005, 1), 5); aplicarTransform(); }, { passive: false });
+  lb.addEventListener('touchstart', e => {
+    if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      lbLastTouch = { dist: Math.hypot(dx, dy) };
+    } else if (e.touches.length === 1 && lbScale > 1) {
+      lbDragging = true;
+      lbLastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+  });
+  lb.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (e.touches.length === 2 && lbLastTouch) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const dist = Math.hypot(dx, dy);
+      lbScale = Math.min(Math.max(lbScale * (dist / lbLastTouch.dist), 1), 5);
+      lbLastTouch.dist = dist;
+      aplicarTransform();
+    } else if (e.touches.length === 1 && lbDragging) {
+      lbTranslate.x += e.touches[0].clientX - lbLastPos.x;
+      lbTranslate.y += e.touches[0].clientY - lbLastPos.y;
+      lbLastPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      aplicarTransform();
+    }
+  }, { passive: false });
+  lb.addEventListener('touchend', () => { lbDragging = false; lbLastTouch = null; if (lbScale <= 1) lbTranslate = { x: 0, y: 0 }; });
+  lb.addEventListener('dblclick', () => { lbScale = 1; lbTranslate = { x: 0, y: 0 }; aplicarTransform(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharLightbox(); });
+
+  function downloadLightbox() { downloadImg(lbSrc, 'umojametal-projeto'); }
+  function downloadImg(src, nome) {
+    const a = document.createElement('a');
+    a.href = src;
+    a.download = nome || 'umojametal';
+    a.click();
+  }
+
+  // ─── STOCK ───────────────────────────
+  function adicionarStock() {
+    const nome = document.getElementById('stk-nome').value;
+    const qty = parseInt(document.getElementById('stk-qty').value) || 0;
+    const unidade = document.getElementById('stk-unidade').value;
+    if (!nome) { alert('Preenche o nome do material'); return; }
+    dados.stock.push({ nome, qty, unidade });
+    guardar();
+    renderStock();
+    document.getElementById('stk-nome').value = '';
+    document.getElementById('stk-qty').value = '';
+  }
+
+  function renderStock() {
+    const cont = document.getElementById('lista-stock');
+    if (!dados.stock.length) { cont.innerHTML = '<p style="color:var(--texto-muted);font-size:13px;">Stock vazio.</p>'; return; }
+    cont.innerHTML = dados.stock.map((s, i) => `
+      <div class="stock-item ${s.qty < 3 ? 'alerta' : ''}">
+        <span>${s.nome}</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="stock-badge ${s.qty < 3 ? 'baixo' : 'ok'}">${s.qty} ${s.unidade}</span>
+          <button onclick="editarStock(${i})" style="background:transparent;border:none;color:var(--texto-muted);cursor:pointer;font-size:14px;">✏️</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function editarStock(i) {
+    const novaQty = prompt('Nova quantidade para ' + dados.stock[i].nome + ':', dados.stock[i].qty);
+    if (novaQty !== null) { dados.stock[i].qty = parseInt(novaQty) || 0; guardar(); renderStock(); }
+  }
+
+  // ─── CÁLCULO DE PESO ─────────────────
+  function calcularPeso() {
+    const comprimento = parseFloat(document.getElementById('comprimento').value) || 0;
+    const pesoMetro = parseFloat(document.getElementById('pesoMetro').value) || 0;
+    const quantidade = parseInt(document.getElementById('quantidade').value) || 1;
+    const total = comprimento * pesoMetro * quantidade;
+    const box = document.getElementById('resultadoPeso');
+    document.getElementById('resultadoPesoTexto').textContent = 'Peso total: ' + total.toFixed(2) + ' kg';
+    box.style.display = 'block';
+  }
+
+  // ─── TRABALHOS ───────────────────────
+  function guardarTrabalho() {
+    const cliente = document.getElementById('cliente').value;
+    const servico = document.getElementById('servico').value;
+    const valor = parseFloat(document.getElementById('trabalho-valor').value) || 0;
+    if (!cliente || !servico) { alert('Preenche cliente e serviço'); return; }
+    dados.trabalhos.push({ cliente, servico, valor, obs: document.getElementById('obs').value, data: new Date().toLocaleDateString('pt-AO') });
+    dados.financeiro.vendas += valor;
+    guardar();
+    renderTrabalhos();
+    document.getElementById('cliente').value = '';
+    document.getElementById('servico').value = '';
+    document.getElementById('trabalho-valor').value = '';
+    document.getElementById('obs').value = '';
+  }
+
+  function renderTrabalhos() {
+    const cont = document.getElementById('listaTrabalhos');
+    if (!dados.trabalhos.length) { cont.innerHTML = '<p style="color:var(--texto-muted);font-size:13px;">Sem trabalhos.</p>'; return; }
+    cont.innerHTML = dados.trabalhos.slice().reverse().map(t =>
+      `<div class="lista-item"><strong>${t.cliente}</strong> — ${t.servico}
+       <span style="float:right;color:var(--verde)">${formatKz(t.valor)}</span>
+       <br><span style="font-size:11px;color:var(--texto-muted)">${t.data}</span></div>`
+    ).join('');
+  }
+
+  // ─── PWA INSTALL ─────────────────────
+  let deferredPrompt = null;
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    const wasDismissed = localStorage.getItem('pwa-dismissed') === 'true';
+    if (isMobile && !isStandalone && !wasDismissed) {
+      setTimeout(() => document.getElementById('pwa-banner').classList.add('show'), 3000);
+    }
+  });
+
+  async function instalarPWA() {
+    if (!deferredPrompt) return;
+    await deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') document.getElementById('pwa-banner').classList.remove('show');
+    deferredPrompt = null;
+  }
+
+  function fecharBannerPWA() {
+    document.getElementById('pwa-banner').classList.remove('show');
+    localStorage.setItem('pwa-dismissed', 'true');
+  }
+
+  // ─── INIT ─────────────────────────────
+  calcularOrcamento();
+  atualizarDashboard();
 </script>
 
 </body>
