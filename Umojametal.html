@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Umojametal</title>
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Umojametal">
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    /* ═══════════════════════════════════════
+       RESET & DARK MODE BASE
+    ═══════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --laranja: #FF5722;
+      --laranja-hover: #e64a19;
+      --preto: #000000;
+      --cinza-escuro: #111111;
+      --cinza-medio: #1a1a1a;
+      --cinza-card: #222222;
+      --cinza-borda: #333333;
+      --texto: #f0f0f0;
+      --texto-muted: #888888;
+      --vermelho-alerta: #ff2222;
+      --verde: #4caf50;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--preto);
+      color: var(--texto);
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    /* ═══════════════════════════════════════
+       HEADER
+    ═══════════════════════════════════════ */
+    header {
+      background: var(--cinza-escuro);
+      border-bottom: 2px solid var(--laranja);
+      padding: 16px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--laranja);
+      letter-spacing: 2px;
+    }
+    header p {
+      font-size: 11px;
+      color: var(--texto-muted);
+      margin-top: 2px;
+    }
+
+    /* ═══════════════════════════════════════
+       NAV TABS
+    ═══════════════════════════════════════ */
+    .nav-tabs {
+      display: flex;
+      overflow-x: auto;
+      background: var(--cinza-escuro);
+      border-bottom: 1px solid var(--cinza-borda);
+      scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      flex: 0 0 auto;
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--texto-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .nav-tab.active {
+      color: var(--laranja);
+      border-bottom-color: var(--laranja);
+    }
+
+    /* ═══════════════════════════════════════
+       PAGES
+    ═══════════════════════════════════════ */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ═══════════════════════════════════════
+       CARDS / SECTIONS
+    ═══════════════════════════════════════ */
+    .card {
+      background: var(--cinza-card);
+      border: 1px solid var(--cinza-borda);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 12px;
+    }
+    .card h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--laranja);
+      margin-bottom: 14px;
+    }
+
+    /* ═══════════════════════════════════════
+       FORM ELEMENTS
+    ═══════════════════════════════════════ */
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--texto-muted);
+      margin-top: 12px;
+      margin-bottom: 4px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--cinza-escuro);
+      border: 1px solid var(--cinza-borda);
+      border-radius: 8px;
+      color: var(--texto);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--laranja);
+    }
+    select option { background: var(--cinza-escuro); }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+    /* ═══════════════════════════════════════
+       BUTTONS
+    ═══════════════════════════════════════ */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 14px;
+      transition: opacity 0.2s;
+    }
+    .btn:active { opacity: 0.8; }
+    .btn-primary { background: var(--laranja); color: #000; }
+    .btn-secondary { background: var(--cinza-borda); color: var(--texto); }
+    .btn-green { background: var(--verde); color: #000; }
+    .btn-whatsapp { background: #25D366; color: #000; }
+    .btn-sm {
+      width: auto;
+      padding: 7px 12px;
+      font-size: 12px;
+      margin-top: 0;
+      border-radius: 6px;
+    }
+
+    /* ═══════════════════════════════════════
+       DASHBOARD — RESUMO
+    ═══════════════════════════════════════ */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 12px;
+    }
+    .stat-card {
+      background: var(--cinza-card);
+      border: 1px solid var(--cinza-borda);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+    .stat-card .valor {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--laranja);
+    }
+    .stat-card .label {
+      font-size: 11px;
+      color: var(--texto-muted);
+      margin-top: 4px;
+    }
+    .lucro-card {
+      background: linear-gradient(135deg, #1a2a1a, #0d1f0d);
+      border-color: var(--verde);
+      grid-column: span 2;
+    }
+    .lucro-card .valor { color: var(--verde); font-size: 28px; }
+
+    /* ═══════════════════════════════════════
+       RESULTADO ORÇAMENTO
+    ═══════════════════════════════════════ */
+    .resultado-box {
+      background: var(--cinza-escuro);
+      border: 1px solid var(--laranja);
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 14px;
+    }
+    .resultado-linha {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--cinza-borda);
+    }
+    .resultado-linha:last-child { border: none; }
+    .resultado-total {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--laranja);
+      margin-top: 8px;
+    }
+
+    /* ═══════════════════════════════════════
+       STOCK ALERT
+    ═══════════════════════════════════════ */
+    .stock-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: var(--cinza-escuro);
+      border: 1px solid var(--cinza-borda);
+      border-radius: 8px;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .stock-item.alerta {
+      border-color: var(--vermelho-alerta);
+      box-shadow: 0 0 8px rgba(255,34,34,0.3);
+    }
+    .stock-badge {
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+    .stock-badge.ok { background: #1a3a1a; color: var(--verde); }
+    .stock-badge.baixo { background: #3a1a1a; color: var(--vermelho-alerta); }
+
+    /* ═══════════════════════════════════════
+       IMAGENS — CATÁLOGO / GALERIA
+    ═══════════════════════════════════════ */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+    .img-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: #111;
+      cursor: zoom-in;
+    }
+    .img-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .img-wrapper:hover img { transform: scale(1.02); }
+    .img-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      padding: 20px 12px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .img-overlay span { font-size: 13px; font-weight: 600; }
+    .btn-download-img {
+      background: var(--laranja);
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ═══════════════════════════════════════
+       FULLSCREEN LIGHTBOX
+    ═══════════════════════════════════════ */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.97);
+      z-index: 99999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox-img {
+      max-width: 100%;
+      max-height: 85vh;
+      object-fit: contain;
+      transition: transform 0.15s ease;
+      touch-action: none;
+      user-select: none;
+    }
+    .lightbox-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    }
+    .lb-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      color: #fff;
+      width: 38px;
+      height: 38px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+    .lb-btn.laranja { background: var(--laranja); color: #000; border-color: var(--laranja); }
+    .lb-hint {
+      position: absolute;
+      bottom: 20px;
+      color: #444;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════
+       ASSINATURA DIGITAL
+    ═══════════════════════════════════════ */
+    #canvas-assinatura {
+      width: 100%;
+      height: 160px;
+      background: var(--cinza-escuro);
+      border: 1px dashed var(--cinza-borda);
+      border-radius: 8px;
+      cursor: crosshair;
+      display: block;
+      touch-action: none;
+    }
+
+    /* ═══════════════════════════════════════
+       LISTA DE TRABALHOS / CLIENTES
+    ═══════════════════════════════════════ */
+    .lista-item {
+      background: var(--cinza-escuro);
+      border: 1px solid var(--cinza-borda);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .lista-item strong { color: var(--laranja); }
+
+    /* ═══════════════════════════════════════
+       PWA INSTALL BANNER
+    ═══════════════════════════════════════ */
+    #pwa-banner {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9998;
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      border: 1px solid var(--laranja);
+      border-radius: 16px;
+      padding: 12px 16px;
+      box-shadow: 0 8px 32px rgba(255,87,34,0.25);
+      max-width: calc(100vw - 32px);
+      align-items: center;
+      gap: 12px;
+      animation: slideUp 0.4s ease forwards;
+    }
+    #pwa-banner.show { display: flex; }
+    .pwa-icon {
+      width: 40px; height: 40px;
+      background: var(--laranja);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 18px; color: #000;
+      flex-shrink: 0;
+    }
+    .pwa-text p { margin: 0; }
+    .pwa-text .t1 { font-size: 13px; font-weight: 700; }
+    .pwa-text .t2 { font-size: 11px; color: var(--texto-muted); }
+    #btn-instalar {
+      background: var(--laranja); color: #000;
+      border: none; border-radius: 10px;
+      padding: 8px 14px; font-size: 12px; font-weight: 700;
+      cursor: pointer; flex-shrink: 0;
+    }
+    #btn-fechar-pwa {
+      background: transparent; border: none;
+      color: var(--texto-muted); cursor: pointer;
+      font-size: 18px; flex-shrink: 0; padding: 4px;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--laranja); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     HEADER
+══════════════════════════════════════ -->
+<header>
+  <h1>⚙ UMOJAMETAL</h1>
+  <p>Gestão Profissional de Serralharia</p>
+</header>
+
+<!-- ══════════════════════════════════════
+     NAV TABS
+══════════════════════════════════════ -->
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="mudarPagina('dashboard', this)">📊 Dashboard</div>
+  <div class="nav-tab" onclick="mudarPagina('orcamento', this)">📋 Orçamento</div>
+  <div class="nav-tab" onclick="mudarPagina('clientes', this)">👤 Clientes</div>
+  <div class="nav-tab" onclick="mudarPagina('catalogo', this)">🖼 Catálogo</div>
+  <div class="nav-tab" onclick="mudarPagina('stock', this)">📦 Stock</div>
+  <div class="nav-tab" onclick="mudarPagina('calculo', this)">📐 Cálculo</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PÁGINA: DASHBOARD
+══════════════════════════════════════ -->
+<div id="page-dashboard" class="page active">
+
+  <div class="dashboard-grid">
+    <div class="stat-card lucro-card">
+      <div class="valor" id="dash-lucro">0 Kz</div>
+      <div class="label">💰 Lucro Real (Vendas − Custos)</div>
+    </div>
+    <div class="stat-card">
+      <div class="valor" id="dash-vendas">0 Kz</div>
+      <div class="label">Total Vendas</div>
+    </div>
+    <div class="stat-card">
+      <div class="valor" id="dash-custos">0 Kz</div>
+      <div class="label">Total Custos</div>
+    </div>
+    <div class="stat-card">
+      <div class="valor" id="dash-trabalhos">0</div>
+      <div class="label">Trabalhos</div>
+    </div>
+    <div class="stat-card">
+      <div class="valor" id="dash-clientes">0</div>
+      <div class="label">Clientes</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📋 Últimos Trabalhos</h2>
+    <div id="lista-dash-trabalhos">
+      <p style="color:var(--texto-muted);font-size:13px;">Sem trabalhos registados.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PÁGINA: ORÇAMENTO
+══════════════════════════════════════ -->
+<div id="page-orcamento" class="page">
+  <div class="card">
+    <h2>📋 Formulário de Orçamento</h2>
+
+    <label>Cliente</label>
+    <input type="text" id="orc-cliente" placeholder="Nome do cliente">
+
+    <label>Serviço / Item</label>
+    <input type="text" id="orc-servico" placeholder="Ex: Portão, Grade, Janela...">
+
+    <div class="row-2">
+      <div>
+        <label>Largura (m)</label>
+        <input type="number" id="orc-largura" placeholder="0.00" step="0.01" oninput="calcularOrcamento()">
+      </div>
+      <div>
+        <label>Altura (m)</label>
+        <input type="number" id="orc-altura" placeholder="0.00" step="0.01" oninput="calcularOrcamento()">
+      </div>
+    </div>
+
+    <label>Custo de Materiais (Kz)</label>
+    <input type="number" id="orc-materiais" placeholder="0" oninput="calcularOrcamento()">
+
+    <label>Mão de Obra (Kz)</label>
+    <input type="number" id="orc-mao-obra" placeholder="0" oninput="calcularOrcamento()">
+
+    <label>Custos Fixos (Kz)</label>
+    <input type="number" id="orc-custos-fixos" placeholder="0" oninput="calcularOrcamento()">
+
+    <label>Margem de Lucro (%)</label>
+    <input type="number" id="orc-margem" placeholder="20" value="20" oninput="calcularOrcamento()">
+
+    <label>Prazo de Entrega</label>
+    <input type="text" id="orc-prazo" placeholder="Ex: 7 dias úteis">
+
+    <div class="row-2">
+      <div>
+        <label>IVA</label>
+        <select id="orc-iva" onchange="calcularOrcamento()">
+          <option value="0">0%</option>
+          <option value="7">7%</option>
+          <option value="14" selected>14%</option>
+        </select>
+      </div>
+      <div>
+        <label>Retenção na Fonte</label>
+        <select id="orc-retencao" onchange="calcularOrcamento()">
+          <option value="0">Não aplicar</option>
+          <option value="6.5">6.5%</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- RESULTADO -->
+    <div class="resultado-box" id="resultado-orcamento">
+      <div class="resultado-linha"><span>Materiais (+ 10% margem)</span><span id="r-materiais">0 Kz</span></div>
+      <div class="resultado-linha"><span>Mão de Obra</span><span id="r-mao-obra">0 Kz</span></div>
+      <div class="resultado-linha"><span>Custos Fixos</span><span id="r-custos-fixos">0 Kz</span></div>
+      <div class="resultado-linha"><span>Subtotal</span><span id="r-subtotal">0 Kz</span></div>
+      <div class="resultado-linha"><span>Margem de Lucro</span><span id="r-margem">0 Kz</span></div>
+      <div class="resultado-linha"><span>IVA</span><span id="r-iva">0 Kz</span></div>
+      <div class="resultado-linha"><span>Retenção na Fonte</span><span id="r-retencao">0 Kz</span></div>
+      <div class="resultado-total">TOTAL FINAL: <span id="r-total">0 Kz</span></div>
+    </div>
+
+    <button class="btn btn-whatsapp" onclick="enviarWhatsApp()">
+      📱 Enviar via WhatsApp
+    </button>
+    <button class="btn btn-primary" onclick="guardarOrcamento()">
+      💾 Guardar Orçamento
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PÁGINA: CLIENTES
+══════════════════════════════════════ -->
+<div id="page-clientes" class="page">
+  <div class="card">
+    <h2>👤 Registo de Cliente</h2>
+
+    <label>Nome</label>
+    <input type="text" id="cli-nome" placeholder="Nome completo">
+
+    <label>Telefone</label>
+    <input type="tel" id="cli-tel" placeholder="+244 9xx xxx xxx">
+
+    <label>Morada</label>
+    <input type="text" id="cli-morada" placeholder="Endereço">
+
+    <button class="btn btn-secondary" onclick="capturarGPS()">
+      📍 Capturar Localização GPS
+    </button>
+    <div id="gps-resultado" style="font-size:12px;color:var(--texto-muted);margin-top:6px;"></div>
+
+    <label>Notas</label>
+    <textarea id="cli-notas" placeholder="Observações sobre o cliente..."></textarea>
+
+    <!-- ASSINATURA DIGITAL -->
+    <label>✍️ Assinatura Digital do Cliente</label>
+    <canvas id="canvas-assinatura"></canvas>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button class="btn btn-secondary btn-sm" onclick="limparAssinatura()" style="flex:1;">Limpar</button>
+      <button class="btn btn-primary btn-sm" onclick="guardarAssinatura()" style="flex:1;">Guardar Assinatura</button>
+    </div>
+
+    <button class="btn btn-primary" onclick="guardarCliente()" style="margin-top:16px;">
+      💾 Guardar Cliente
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>📋 Clientes Registados</h2>
+    <div id="lista-clientes">
+      <p style="color:var(--texto-muted);font-size:13px;">Sem clientes registados.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PÁGINA: CATÁLOGO / GALERIA
+══════════════════════════════════════ -->
+<div id="page-catalogo" class="page">
+  <div class="card">
+    <h2>📷 Adicionar Foto</h2>
+    <label>Título</label>
+    <input type="text" id="cat-titulo" placeholder="Ex: Portão Batente, Grade...">
+    <label>Categoria</label>
+    <select id="cat-categoria">
+      <option value="catalogo">Catálogo</option>
+      <option value="concluido">Projeto Concluído</option>
+      <option value="galeria">Galeria</option>
+    </select>
+    <label>Foto</label>
+    <input type="file" id="cat-foto" accept="image/*" capture="environment">
+    <button class="btn btn-primary" onclick="adicionarFoto()">📸 Adicionar Foto</button>
+  </div>
+
+  <div class="card">
+    <h2>🖼 Catálogo</h2>
+    <div class="catalog-grid" id="grid-catalogo">
+      <p style="color:var(--texto-muted);font-size:13px;">Sem fotos no catálogo.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>✅ Projetos Concluídos</h2>
+    <div class="catalog-grid" id
