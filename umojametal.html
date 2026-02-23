@@ -1,1 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Umojametal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--laranja:#FF5722;--preto:#000;--card:#1a1a1a;--borda:#333;--texto:#f0f0f0;--muted:#888;--verde:#4caf50}
+body{font-family:system-ui,sans-serif;background:var(--preto);color:var(--texto);padding-bottom:80px}
+header{background:#111;border-bottom:2px solid var(--laranja);padding:14px;text-align:center}
+header h1{color:var(--laranja);font-size:20px;font-weight:800;letter-spacing:2px}
+header p{color:var(--muted);font-size:11px;margin-top:2px}
+nav{display:flex;overflow-x:auto;background:#111;border-bottom:1px solid var(--borda)}
+nav::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;padding:12px 14px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab.on{color:var(--laranja);border-bottom-color:var(--laranja)}
+.page{display:none;padding:12px}
+.page.on{display:block}
+.card{background:var(--card);border:1px solid var(--borda);border-radius:10px;padding:14px;margin-bottom:12px}
+.card h2{color:var(--laranja);font-size:14px;margin-bottom:12px}
+label{display:block;font-size:11px;color:var(--muted);margin-top:10px;margin-bottom:3px}
+input,select,textarea{width:100%;padding:10px;background:#111;border:1px solid var(--borda);border-radius:7px;color:var(--texto);font-size:14px;outline:none}
+input:focus,select:focus{border-color:var(--laranja)}
+textarea{min-height:70px;resize:vertical}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{width:100%;padding:12px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-p{background:var(--laranja);color:#000}
+.btn-w{background:#25D366;color:#000}
+.btn-s{background:#333;color:var(--texto)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--borda);border-radius:10px;padding:14px;text-align:center}
+.stat.lucro{grid-column:span 2;border-color:var(--verde);background:#0a1f0a}
+.stat .v{font-size:22px;font-weight:800;color:var(--laranja)}
+.stat.lucro .v{color:var(--verde);font-size:26px}
+.stat .l{font-size:11px;color:var(--muted);margin-top:3px}
+.res{background:#111;border:1px solid var(--laranja);border-radius:8px;padding:12px;margin-top:12px}
+.rl{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--borda)}
+.rl:last-child{border:none}
+.total{font-size:17px;font-weight:800;color:var(--laranja);margin-top:8px}
+.item{background:#111;border:1px solid var(--borda);border-radius:7px;padding:10px;margin-top:7px;font-size:13px}
+.item strong{color:var(--laranja)}
+.stk{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:#111;border:1px solid var(--borda);border-radius:7px;margin-top:7px;font-size:13px}
+.stk.alerta{border-color:#f00;box-shadow:0 0 6px rgba(255,0,0,0.3)}
+.badge{padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.ok{background:#0a2a0a;color:var(--verde)}
+.baixo{background:#2a0a0a;color:#f00}
+canvas{width:100%;height:150px;background:#111;border:1px dashed var(--borda);border-radius:7px;display:block;touch-action:none;cursor:crosshair}
+.btn-sm{width:auto;padding:7px 12px;font-size:12px;margin-top:6px;border-radius:6px;flex:1}
+#gps{font-size:12px;color:var(--muted);margin-top:5px}
+.img-wrap{position:relative;width:100%;overflow:hidden;background:#111;cursor:zoom-in;margin-top:4px}
+.img-wrap img{width:100%;height:auto;display:block}
+.dl-btn{position:absolute;bottom:8px;right:8px;background:var(--laranja);color:#000;border:none;border-radius:6px;padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer}
+#lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.97);z-index:9999;flex-direction:column;align-items:center;justify-content:center}
+#lb.open{display:flex}
+#lb img{max-width:100%;max-height:85vh;object-fit:contain}
+.lb-bar{position:absolute;top:0;left:0;right:0;display:flex;justify-content:flex-end;gap:6px;padding:10px;background:linear-gradient(to bottom,rgba(0,0,0,0.8),transparent)}
+.lb-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:7px;color:#fff;width:36px;height:36px;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lb-btn.o{background:var(--laranja);color:#000;border-color:var(--laranja)}
+#pwa{display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:9998;background:#1a1a1a;border:1px solid var(--laranja);border-radius:14px;padding:10px 14px;box-shadow:0 6px 24px rgba(255,87,34,0.2);align-items:center;gap:10px;max-width:calc(100vw - 24px)}
+#pwa.show{display:flex}
+.pi{width:36px;height:36px;background:var(--laranja);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#000;flex-shrink:0}
+#pwa p{margin:0;font-size:12px}
+#pwa .t2{color:var(--muted);font-size:10px}
+#btn-inst{background:var(--laranja);color:#000;border:none;border-radius:8px;padding:7px 12px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0}
+#btn-fpwa{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:3px;flex-shrink:0}
+</style>
+</head>
+<body>
 
+<header>
+  <h1>⚙ UMOJAMETAL</h1>
+  <p>Gestão Profissional de Serralharia</p>
+</header>
+
+<nav>
+  <div class="tab on" onclick="go('dash',this)">📊 Dashboard</div>
+  <div class="tab" onclick="go('orc',this)">📋 Orçamento</div>
+  <div class="tab" onclick="go('cli',this)">👤 Clientes</div>
+  <div class="tab" onclick="go('cat',this)">🖼 Catálogo</div>
+  <div class="tab" onclick="go('stk',this)">📦 Stock</div>
+  <div class="tab" onclick="go('calc',this)">📐 Cálculo</div>
+</nav>
+
+<!-- DASHBOARD -->
+<div id="dash" class="page on">
+  <div class="stat-grid">
+    <div class="stat lucro"><div class="v" id="d-lucro">0 Kz</div><div class="l">💰 Lucro Real</div></div>
+    <div class="stat"><div class="v" id="d-vendas">0 Kz</div><div class="l">Vendas</div></div>
+    <div class="stat"><div class="v" id="d-custos">0 Kz</div><div class="l">Custos</div></div>
+    <div class="stat"><div class="v" id="d-trab">0</div><div class="l">Trabalhos</div></div>
+    <div class="stat"><div class="v" id="d-cli">0</div><div class="l">Clientes</div></div>
+  </div>
+  <div class="card"><h2>📋 Últimos Trabalhos</h2><div id="d-lista"><p style="color:var(--muted);font-size:13px">Sem trabalhos.</p></div></div>
+</div>
+
+<!-- ORÇAMENTO -->
+<div id="orc" class="page">
+  <div class="card">
+    <h2>📋 Orçamento</h2>
+    <label>Cliente</label><input id="o-cli" placeholder="Nome do cliente">
+    <label>Serviço</label><input id="o-svc" placeholder="Ex: Portão, Grade...">
+    <div class="g2">
+      <div><label>Largura (m)</label><input type="number" id="o-l" placeholder="0.00" oninput="calc()"></div>
+      <div><label>Altura (m)</label><input type="number" id="o-a" placeholder="0.00" oninput="calc()"></div>
+    </div>
+    <label>Materiais (Kz)</label><input type="number" id="o-mat" placeholder="0" oninput="calc()">
+    <label>Mão de Obra (Kz)</label><input type="number" id="o-mao" placeholder="0" oninput="calc()">
+    <label>Custos Fixos (Kz)</label><input type="number" id="o-fix" placeholder="0" oninput="calc()">
+    <label>Margem Lucro (%)</label><input type="number" id="o-mrg" value="20" oninput="calc()">
+    <label>Prazo de Entrega</label><input id="o-prazo" placeholder="Ex: 7 dias úteis">
+    <div class="g2">
+      <div><label>IVA</label>
+        <select id="o-iva" onchange="calc()">
+          <option value="0">0%</option>
+          <option value="7">7%</option>
+          <option value="14" selected>14%</option>
+        </select>
+      </div>
+      <div><label>Retenção</label>
+        <select id="o-ret" onchange="calc()">
+          <option value="0">Não aplicar</option>
+          <option value="6.5">6.5%</option>
+        </select>
+      </div>
+    </div>
+    <div class="res">
+      <div class="rl"><span>Materiais (+10%)</span><span id="r-mat">0 Kz</span></div>
+      <div class="rl"><span>Mão de Obra</span><span id="r-mao">0 Kz</span></div>
+      <div class="rl"><span>Custos Fixos</span><span id="r-fix">0 Kz</span></div>
+      <div class="rl"><span>Subtotal</span><span id="r-sub">0 Kz</span></div>
+      <div class="rl"><span>Margem</span><span id="r-mrg">0 Kz</span></div>
+      <div class="rl"><span>IVA</span><span id="r-iva">0 Kz</span></div>
+      <div class="rl"><span>Retenção</span><span id="r-ret">0 Kz</span></div>
+      <div class="total">TOTAL: <span id="r-tot">0 Kz</span></div>
+    </div>
+    <button class="btn btn-w" onclick="whatsapp()">📱 Enviar WhatsApp</button>
+    <button class="btn btn-p" onclick="guardarOrc()">💾 Guardar</button>
+  </div>
+</div>
+
+<!-- CLIENTES -->
+<div id="cli" class="page">
+  <div class="card">
+    <h2>👤 Novo Cliente</h2>
+    <label>Nome</label><input id="c-nome" placeholder="Nome completo">
+    <label>Telefone</label><input id="c-tel" placeholder="+244 9xx xxx xxx">
+    <label>Morada</label><input id="c-mor" placeholder="Endereço">
+    <button class="btn btn-s" onclick="gps()" style="margin-top:10px">📍 Capturar GPS</button>
+    <div id="gps"></div>
+    <label>Notas</label><textarea id="c-not" placeholder="Observações..."></textarea>
+    <label>✍️ Assinatura Digital</label>
+    <canvas id="assin"></canvas>
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button class="btn btn-s btn-sm" onclick="limpar()">Limpar</button>
+      <button class="btn btn-p btn-sm" onclick="alert('Assinatura guardada!')">Guardar Assinatura</button>
+    </div>
+    <button class="btn btn-p" onclick="guardarCli()">💾 Guardar Cliente</button>
+  </div>
+  <div class="card"><h2>📋 Clientes</h2><div id="c-lista"><p style="color:var(--muted);font-size:13px">Sem clientes.</p></div></div>
+</div>
+
+<!-- CATÁLOGO -->
+<div id="cat" class="page">
+  <div class="card">
+    <h2>📷 Adicionar Foto</h2>
+    <label>Título</label><input id="f-tit" placeholder="Ex: Portão Batente">
+    <label>Categoria</label>
+    <select id="f-cat">
+      <option value="cat">Catálogo</option>
+      <option value="conc">Projeto Concluído</option>
+      <option value="gal">Galeria</option>
+    </select>
+    <label>Foto</label>
+    <input type="file" id="f-foto" accept="image/*" capture="environment">
+    <button class="btn btn-p" onclick="addFoto()">📸 Adicionar</button>
+  </div>
+  <div class="card"><h2>🖼 Catálogo</h2><div id="g-cat"><p style="color:var(--muted);font-size:13px">Sem fotos.</p></div></div>
+  <div class="card"><h2>✅ Concluídos</h2><div id="g-conc"><p style="color:var(--muted);font-size:13px">Sem projetos.</p></div></div>
+  <div class="card"><h2>📸 Galeria</h2><div id="g-gal"><p style="color:var(--muted);font-size:13px">Sem fotos.</p></div></div>
+</div>
+
+<!-- STOCK -->
+<div id="stk" class="page">
+  <div class="card">
+    <h2>📦 Adicionar Stock</h2>
+    <label>Material</label><input id="s-nome" placeholder="Ex: Tubo 40x40">
+    <div class="g2">
+      <div><label>Quantidade</label><input type="number" id="s-qty" placeholder="0"></div>
+      <div><label>Unidade</label>
+        <select id="s-un"><option>unid</option><option>kg</option><option>m</option><option>m²</option></select>
+      </div>
+    </div>
+    <button class="btn btn-p" onclick="addStk()">➕ Adicionar</button>
+  </div>
+  <div class="card">
+    <h2>📋 Inventário</h2>
+    <p style="font-size:11px;color:#f00;margin-bottom:8px">⚠️ Vermelho = menos de 3 unidades</p>
+    <div id="s-lista"><p style="color:var(--muted);font-size:13px">Stock vazio.</p></div>
+  </div>
+</div>
+
+<!-- CÁLCULO -->
+<div id="calc" class="page">
+  <div class="card">
+    <h2>📐 Peso de Material</h2>
+    <label>Tipo</label>
+    <select id="tipo"><option>Barra maciça</option><option>Tubo</option><option>Chapa</option></select>
+    <label>Comprimento (m)</label><input type="number" id="comp" placeholder="0.00">
+    <label>Peso por metro (kg)</label><input type="number" id="pmet" placeholder="0.00">
+    <label>Quantidade</label><input type="number" id="qty" placeholder="1">
+    <button class="btn btn-p" onclick="calcPeso()">⚙️ Calcular</button>
+    <div id="res-peso" style="display:none" class="res"><div class="total" id="res-txt"></div></div>
+  </div>
+  <div class="card">
+    <h2>📋 Trabalhos</h2>
+    <label>Cliente</label><input id="t-cli" placeholder="Nome">
+    <label>Serviço</label><input id="t-svc" placeholder="Descrição">
+    <label>Valor (Kz)</label><input type="number" id="t-val" placeholder="0">
+    <label>Observações</label><textarea id="t-obs" placeholder="Notas..."></textarea>
+    <button class="btn btn-p" onclick="addTrab()">💾 Guardar</button>
+    <div id="t-lista" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lb">
+  <div class="lb-bar">
+    <button class="lb-btn o" id="lb-dl" onclick="dlLb()">⬇</button>
+    <button class="lb-btn" onclick="fecharLb()">✕</button>
+  </div>
+  <img id="lb-img" src="" alt="">
+</div>
+
+<!-- PWA BANNER -->
+<div id="pwa">
+  <div class="pi">U</div>
+  <div><p>Umojametal</p><p class="t2">Instala para acesso rápido</p></div>
+  <button id="btn-inst" onclick="instPWA()">⬇ Instalar</button>
+  <button id="btn-fpwa" onclick="fecharPWA()">✕</button>
+</div>
+
+<script>
+// ── DADOS ──────────────────────────────
+var D = {trab:[],cli:[],stk:[],fotos:[],fin:{v:0,c:0}};
+try{var s=localStorage.getItem('umo');if(s)D=JSON.parse(s);}catch(e){}
+function save(){try{localStorage.setItem('umo',JSON.stringify(D));}catch(e){}}
+function kz(n){return (Number(n)||0).toLocaleString('pt-AO')+' Kz';}
+
+// ── NAV ────────────────────────────────
+function go(id,el){
+  document.querySelectorAll('.page').forEach(function(p){p.className='page';});
+  document.querySelectorAll('.tab').forEach(function(t){t.className='tab';});
+  document.getElementById(id).className='page on';
+  el.className='tab on';
+  if(id==='dash')updDash();
+  if(id==='stk')rendStk();
+  if(id==='cat')rendFotos();
+  if(id==='cli')rendCli();
+  if(id==='calc')rendTrab();
+}
+
+// ── DASHBOARD ──────────────────────────
+function updDash(){
+  var l=D.fin.v-D.fin.c;
+  document.getElementById('d-lucro').textContent=kz(l);
+  document.getElementById('d-vendas').textContent=kz(D.fin.v);
+  document.getElementById('d-custos').textContent=kz(D.fin.c);
+  document.getElementById('d-trab').textContent=D.trab.length;
+  document.getElementById('d-cli').textContent=D.cli.length;
+  var el=document.getElementById('d-lista');
+  if(!D.trab.length){el.innerHTML='<p style="color:var(--muted);font-size:13px">Sem trabalhos.</p>';return;}
+  el.innerHTML=D.trab.slice(-5).reverse().map(function(t){
+    return '<div class="item"><strong>'+t.c+'</strong> — '+t.s+'<span style="float:right;color:var(--verde)">'+kz(t.v)+'</span></div>';
+  }).join('');
+}
+
+// ── ORÇAMENTO ──────────────────────────
+function calc(){
+  var mat=parseFloat(document.getElementById('o-mat').value)||0;
+  var mao=parseFloat(document.getElementById('o-mao').value)||0;
+  var fix=parseFloat(document.getElementById('o-fix').value)||0;
+  var mrg=parseFloat(document.getElementById('o-mrg').value)||0;
+  var iva=parseFloat(document.getElementById('o-iva').value)||0;
+  var ret=parseFloat(document.getElementById('o-ret').value)||0;
+  var ma=mat*1.1;
+  var sub=ma+mao+fix;
+  var cm=sub*(1+mrg/100);
+  var vi=cm*(iva/100);
+  var vr=cm*(ret/100);
+  var tot=cm+vi-vr;
+  document.getElementById('r-mat').textContent=kz(ma);
+  document.getElementById('r-mao').textContent=kz(mao);
+  document.getElementById('r-fix').textContent=kz(fix);
+  document.getElementById('r-sub').textContent=kz(sub);
+  document.getElementById('r-mrg').textContent=kz(cm-sub);
+  document.getElementById('r-iva').textContent=kz(vi);
+  document.getElementById('r-ret').textContent='-'+kz(vr);
+  document.getElementById('r-tot').textContent=kz(tot);
+}
+
+function whatsapp(){
+  var it=document.getElementById('o-svc').value||'Serviço';
+  var l=document.getElementById('o-l').value||'0';
+  var a=document.getElementById('o-a').value||'0';
+  var tot=document.getElementById('r-tot').textContent;
+  var msg='Olá! Segue o resumo do seu orçamento da Umojametal. Serviço: '+it+', Medidas: '+l+'x'+a+'m. TOTAL FINAL: '+tot+'. Pode confirmar?';
+  window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+}
+
+function guardarOrc(){
+  var c=document.getElementById('o-cli').value;
+  var s=document.getElementById('o-svc').value;
+  if(!c||!s){alert('Preenche cliente e serviço');return;}
+  var tot=parseFloat(document.getElementById('o-mat').value||0)+parseFloat(document.getElementById('o-mao').value||0);
+  D.trab.push({c:c,s:s,v:tot,d:new Date().toLocaleDateString('pt-AO')});
+  D.fin.v+=tot;
+  D.fin.c+=parseFloat(document.getElementById('o-mat').value||0)+parseFloat(document.getElementById('o-fix').value||0);
+  save();alert('Guardado!');
+}
+
+// ── GPS ────────────────────────────────
+var gpsC=null;
+function gps(){
+  var el=document.getElementById('gps');
+  el.textContent='📡 A obter...';
+  if(!navigator.geolocation){el.textContent='GPS não suportado';return;}
+  navigator.geolocation.getCurrentPosition(function(p){
+    gpsC={lat:p.coords.latitude,lng:p.coords.longitude};
+    el.innerHTML='📍 '+gpsC.lat.toFixed(5)+', '+gpsC.lng.toFixed(5)+' <a href="https://maps.google.com/?q='+gpsC.lat+','+gpsC.lng+'" target="_blank" style="color:var(--laranja)">Maps</a>';
+  },function(e){el.textContent='Erro: '+e.message;});
+}
+
+// ── ASSINATURA ─────────────────────────
+var cv=document.getElementById('assin');
+var cx=cv.getContext('2d');
+var draw=false;
+function ini(){cv.width=cv.offsetWidth;cv.height=150;cx.strokeStyle='#FF5722';cx.lineWidth=2;cx.lineCap='round';}
+window.addEventListener('load',ini);
+window.addEventListener('resize',ini);
+function pos(e){var r=cv.getBoundingClientRect();var s=e.touches?e.touches[0]:e;return{x:s.clientX-r.left,y:s.clientY-r.top};}
+cv.addEventListener('mousedown',function(e){draw=true;cx.beginPath();var p=pos(e);cx.moveTo(p.x,p.y);});
+cv.addEventListener('mousemove',function(e){if(!draw)return;var p=pos(e);cx.lineTo(p.x,p.y);cx.stroke();});
+cv.addEventListener('mouseup',function(){draw=false;});
+cv.addEventListener('touchstart',function(e){e.preventDefault();draw=true;cx.beginPath();var p=pos(e);cx.moveTo(p.x,p.y);},{passive:false});
+cv.addEventListener('touchmove',function(e){e.preventDefault();if(!draw)return;var p=pos(e);cx.lineTo(p.x,p.y);cx.stroke();},{passive:false});
+cv.addEventListener('touchend',function(){draw=false;});
+function limpar(){cx.clearRect(0,0,cv.width,cv.height);}
+
+// ── CLIENTES ───────────────────────────
+function guardarCli(){
+  var n=document.getElementById('c-nome').value;
+  if(!n){alert('Preenche o nome');return;}
+  D.cli.push({n:n,t:document.getElementById('c-tel').value,m:document.getElementById('c-mor').value,nt:document.getElementById('c-not').value,g:gpsC,d:new Date().toLocaleDateString('pt-AO')});
+  save();rendCli();
+  document.getElementById('c-nome').value='';
+  document.getElementById('c-tel').value='';
+  document.getElementById('c-mor').value='';
+  document.getElementById('c-not').value='';
+  gpsC=null;document.getElementById('gps').textContent='';limpar();
+  alert('Cliente guardado!');
+}
+function rendCli(){
+  var el=document.getElementById('c-lista');
+  if(!D.cli.length){el.innerHTML='<p style="color:var(--muted);font-size:13px">Sem clientes.</p>';return;}
+  el.innerHTML=D.cli.map(function(c){
+    return '<div class="item"><strong>'+c.n+'</strong> · '+(c.t||'—')+(c.g?'<br><a href="https://maps.google.com/?q='+c.g.lat+','+c.g.lng+'" target="_blank" style="color:var(--laranja);font-size:11px">📍 Maps</a>':'')+'<span style="float:right;font-size:11px;color:var(--muted)">'+c.d+'</span></div>';
+  }).join('');
+}
+
+// ── CATÁLOGO ───────────────────────────
+function addFoto(){
+  var t=document.getElementById('f-tit').value;
+  var c=document.getElementById('f-cat').value;
+  var f=document.getElementById('f-foto').f
